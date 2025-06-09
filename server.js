@@ -1,11 +1,19 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import sharp from 'sharp';
 import crypto from 'crypto';
 import bodyParser from 'body-parser';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
+// 정적 파일 서빙
+app.use(express.static(path.join(__dirname, 'public')));
+
+// raw 바디로 이미지 데이터 처리
 app.use(bodyParser.raw({ type: ['image/*'], limit: '10mb' }));
 
 app.post('/optimize', async (req, res) => {
@@ -34,3 +42,4 @@ app.post('/optimize', async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+

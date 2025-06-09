@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이미지 최적화 도구</title>
+  <style>
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Nanum Gothic', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    #drop-area {
+      width: 100%;
+      height: 200px;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    #drop-area:hover, #drop-area.drag-over {
+      border-color: #007bff;
+      background-color: #f0f8ff;
+    }
+    #results {
+      list-style: none;
+      padding: 0;
+    }
+    #results li {
+      padding: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #results a {
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+    .hint {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>이미지 최적화 도구</h1>
+  <p class="hint">이미지를 드래그&드롭하거나, 클립보드에서 붙여넣기(Ctrl+V)하세요</p>
+  <div id="drop-area">
+    이미지를 여기에 끌어다 놓으세요
+  </div>
+  <ul id="results"></ul>
+  <script src="app.js"></script>
+</body>
+</html>
