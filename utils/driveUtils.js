@@ -3,7 +3,7 @@ import path from 'path';
 import { Readable } from 'stream';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
-import { GOOGLE_DRIVE_CONFIG } from '../config.js';
+import { GOOGLE_DRIVE_CONFIG } from '../src/config/index.js';
 
 // Token storage path
 const TOKEN_PATH = path.join(process.cwd(), 'token.json');
