@@ -1,4 +1,4 @@
-import { isAuthenticated, listDriveFolders, createFolderIfNotExists } from '../../../utils/driveUtils.js';
+import { isAuthenticated, listDriveFolders, createFolderIfNotExists } from '../utils/driveUtils.js';
 
 /**
  * Get folder list

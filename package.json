@@ -4,7 +4,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "dev": "npm run dev:all",
+    "dev:all": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon server/server.js",
+    "dev:client": "cd client && vite",
+    "start:server": "node server/server.js",
+    "start:client": "cd client && vite preview",
+    "build": "cd client && vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,6 +26,10 @@
     "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@sveltejs/vite-plugin-svelte": "^6.2.0",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.0.1",
+    "svelte": "^5.39.2",
+    "vite": "^7.1.6"
   }
 }

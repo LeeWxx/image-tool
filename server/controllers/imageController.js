@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import crypto from 'crypto';
-import { isAuthenticated, uploadImageToDrive } from '../../../utils/driveUtils.js';
-import { IMAGE_CONFIG } from '../../config/index.js';
+import { isAuthenticated, uploadImageToDrive } from '../utils/driveUtils.js';
+import { IMAGE_CONFIG } from '../config/index.js';
 
 /**
  * Image optimization and upload
