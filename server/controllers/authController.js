@@ -1,4 +1,4 @@
-import { getAuthUrl as getDriveAuthUrl, getTokenFromCode, isAuthenticated } from '../../../utils/driveUtils.js';
+import { getAuthUrl as getDriveAuthUrl, getTokenFromCode, isAuthenticated } from '../utils/driveUtils.js';
 
 /**
  * Check authentication status

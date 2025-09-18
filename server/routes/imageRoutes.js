@@ -4,6 +4,6 @@ import { optimizeAndUpload } from '../controllers/imageController.js';
 const router = Router();
 
 // Image optimization and upload
-router.post('/optimize', optimizeAndUpload);
+router.post('/upload', optimizeAndUpload);
 
 export default router;
