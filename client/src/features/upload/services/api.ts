@@ -1,4 +1,16 @@
-export async function uploadImage(file, folderId) {
+export type UploadResponse = {
+  blob: Blob;
+  url: string;
+  info: {
+    size?: number;
+    filename?: string;
+    drive?: {
+      webViewLink?: string;
+    };
+  };
+};
+
+export async function uploadImage(file: File, folderId: string) {
   const arrayBuffer = await file.arrayBuffer();
 
   const response = await fetch('/api/upload', {
@@ -23,5 +35,5 @@ export async function uploadImage(file, folderId) {
     blob,
     url,
     info
-  };
+  } satisfies UploadResponse;
 }

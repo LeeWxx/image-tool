@@ -1,7 +1,10 @@
-<script>
-  export let result;
+<script lang="ts">
+  import type { UploadResult } from '../state/uploadResults.svelte.ts';
 
-  function formatSize(bytes) {
+  export let result: UploadResult;
+
+  function formatSize(bytes?: number) {
+    if (!bytes && bytes !== 0) return '—';
     return Math.round(bytes / 1024);
   }
 </script>

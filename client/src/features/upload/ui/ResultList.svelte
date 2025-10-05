@@ -1,10 +1,12 @@
-<script>
-  import { results } from './results.js';
+<script lang="ts">
+  import { useUploadResults } from '../state/uploadResults.svelte.ts';
   import ResultItem from './ResultItem.svelte';
+
+  const uploads = useUploadResults();
 </script>
 
 <ul class="results">
-  {#each $results as result (result.id)}
+  {#each uploads.items as result (result.id)}
     <ResultItem {result} />
   {/each}
 </ul>
