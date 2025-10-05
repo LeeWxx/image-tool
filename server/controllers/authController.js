@@ -1,4 +1,5 @@
 import { getAuthUrl as getDriveAuthUrl, getTokenFromCode, isAuthenticated } from '../utils/driveUtils.js';
+import { APP_CONFIG } from '../config/index.js';
 
 /**
  * Check authentication status
@@ -20,7 +21,7 @@ export const checkAuthStatus = (req, res) => {
 export const getAuthUrl = (req, res) => {
   try {
     const url = getDriveAuthUrl();
-    res.json({ url });
+    res.json({ authUrl: url });
   } catch (error) {
     res.status(500).json({ 
       error: 'Failed to generate authentication URL' 
@@ -40,8 +41,8 @@ export const handleOAuthCallback = async (req, res) => {
     }
     
     await getTokenFromCode(code);
-    res.redirect('/?auth=success');
+    res.redirect(`${APP_CONFIG.CLIENT_URL}/?auth=success`);
   } catch (error) {
-    res.redirect('/?auth=error');
+    res.redirect(`${APP_CONFIG.CLIENT_URL}/?auth=error`);
   }
 };
