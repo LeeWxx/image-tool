@@ -1,17 +1,11 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
-  import AuthStatus from './features/auth/AuthStatus.svelte';
-  import FolderSelector from './features/folders/FolderSelector.svelte';
-  import DropZone from './features/upload/DropZone.svelte';
-  import ResultList from './features/upload/ResultList.svelte';
+  import { AuthStatus, loadAuthStatus } from './features/auth/index.ts';
+  import { FolderSelector, useFolderTree } from './features/folders/index.ts';
+  import { ResultList, uploadFiles } from './features/upload/index.ts';
+  import { syncDriveState, clearDriveState, refreshItemsForCurrentFolder } from './features/folders/services/folder.service.ts';
 
-  import { authStatus, isAuthenticated } from './features/auth/auth.js';
-  import { folders, selectedFolder } from './features/folders/folders.js';
-  import { results } from './features/upload/results.js';
-
-  import { checkAuthStatus } from './features/auth/api.js';
-  import { loadFolders } from './features/folders/api.js';
-  import { uploadImage } from './features/upload/api.js';
+  const tree = useFolderTree();
 
   onMount(async () => {
     await initializeAuth();
@@ -19,57 +13,27 @@
 
   async function initializeAuth() {
     try {
-      const data = await checkAuthStatus();
+      const authenticated = await loadAuthStatus();
 
-      if (data.authenticated) {
-        authStatus.set('Connected to Google Drive');
-        isAuthenticated.set(true);
-        const folderList = await loadFolders();
-        folders.set(folderList);
+      if (authenticated) {
+        await syncDriveState();
       } else {
-        authStatus.set('Not connected');
-        isAuthenticated.set(false);
+        clearDriveState();
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
-      authStatus.set('Connection check failed');
+      clearDriveState();
     }
   }
 
   async function handleFiles(event) {
-    const files = event.detail;
+    const files: File[] = event.detail;
+    const targetFolderId = tree.uploadTargetId || '';
 
-    for (let file of files) {
-      // Add processing status
-      const tempId = Date.now() + Math.random();
-      results.update(r => [...r, {
-        id: tempId,
-        originalName: file.name,
-        status: 'processing',
-        originalSize: file.size
-      }]);
+    const { successCount } = await uploadFiles(files, targetFolderId);
 
-      try {
-        const { blob, url, info } = await uploadImage(file, $selectedFolder);
-
-        // Update result
-        results.update(list => list.map(r =>
-          r.id === tempId ? {
-            ...r,
-            status: 'completed',
-            optimizedUrl: url,
-            optimizedSize: info.size || blob.size,
-            filename: info.filename || 'optimized.webp',
-            driveLink: info.drive?.webViewLink
-          } : r
-        ));
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        // Update to error status
-        results.update(list => list.map(r =>
-          r.id === tempId ? { ...r, status: 'error' } : r
-        ));
-      }
+    if (successCount > 0) {
+      await refreshItemsForCurrentFolder();
     }
   }
 </script>
@@ -78,8 +42,7 @@
   <h1>Image Optimization Tool</h1>
 
   <AuthStatus />
-  <FolderSelector />
-  <DropZone on:files={handleFiles} />
+  <FolderSelector on:files={handleFiles} />
   <ResultList />
 </main>
 

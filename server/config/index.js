@@ -21,4 +21,8 @@ export const IMAGE_CONFIG = {
 
 export const SERVER_CONFIG = {
   PORT: parseInt(process.env.PORT) || 3000
-}; 
+};
+
+export const APP_CONFIG = {
+  CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173'
+};

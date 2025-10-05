@@ -11,6 +11,7 @@
     "start:server": "node server/server.js",
     "start:client": "cd client && vite preview",
     "build": "cd client && vite build",
+    "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

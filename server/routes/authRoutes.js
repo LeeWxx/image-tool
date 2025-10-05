@@ -6,7 +6,10 @@ const router = Router();
 // Check authentication status
 router.get('/status', checkAuthStatus);
 
-// Generate authentication URL  
+// Generate authentication URL
 router.get('/url', getAuthUrl);
+
+// Legacy alias for clients expecting /google
+router.get('/google', getAuthUrl);
 
 export default router;
