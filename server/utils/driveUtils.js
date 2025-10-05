@@ -130,7 +130,7 @@ export async function listDriveFolders() {
     
     const response = await drive.files.list({
       q: query,
-      fields: 'files(id, name, parents)',
+      fields: 'files(id, name, parents, modifiedTime)',
       orderBy: 'name',
       pageSize: 100
     });
@@ -143,16 +143,42 @@ export async function listDriveFolders() {
 }
 
 /**
+ * Get items (folders + files) under a parent folder
+ */
+export async function listDriveItems(parentId = null) {
+  try {
+    const drive = getDriveClient();
+    const targetParent = parentId || 'root';
+    const safeParent = targetParent.replace(/'/g, "\\'");
+    const query = `'${safeParent}' in parents and trashed=false`;
+
+    const response = await drive.files.list({
+      q: query,
+      fields: 'files(id, name, mimeType, parents, size, iconLink, thumbnailLink, webViewLink, modifiedTime)',
+      orderBy: 'name',
+      pageSize: 200
+    });
+
+    const items = response.data.files || [];
+    return items;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
  * Upload image to specific folder (includes folder creation)
  */
-export async function createFolderIfNotExists(folderName) {
+export async function createFolderIfNotExists(folderName, parentId = null) {
   try {
     const drive = getDriveClient();
     
     // Check existing folder
+    const safeName = folderName.replace(/'/g, "\\'");
+    const parentClause = parentId ? ` and '${parentId}' in parents` : '';
     const existingFolders = await drive.files.list({
-      q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false`,
-      fields: 'files(id, name)',
+      q: `mimeType='application/vnd.google-apps.folder' and name='${safeName}' and trashed=false${parentClause}`,
+      fields: 'files(id, name, parents)',
       pageSize: 1
     });
     
@@ -163,7 +189,8 @@ export async function createFolderIfNotExists(folderName) {
     // Create folder
     const fileMetadata = {
       name: folderName,
-      mimeType: 'application/vnd.google-apps.folder'
+      mimeType: 'application/vnd.google-apps.folder',
+      ...(parentId ? { parents: [parentId] } : {})
     };
     
     const folder = await drive.files.create({
